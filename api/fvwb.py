@@ -16,6 +16,10 @@ class Api:
         self.password: str = password
         print(username, password)
         self.token: str or None = None
+        self.club_id = 1673
+        self.district_id = 3
+        self.ranking_ids = (1774, 1906)  # PortailSelectedSeasonId, SelectedSeasonId
+        self.calendar_ids = (1982, 1906)  # PortailSelectedSeasonId, SelectedSeasonId
         self.headers: dict = {
             'accept': '*/*',
             'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -23,10 +27,18 @@ class Api:
         }
 
         self.teams = {
-            "P4D": "2841",
-            "P3H": "2842",
-            "P1D": "2728",
-            "P2H": "2974"
+            "calendar": {
+                "P4D": "2841",
+                "P3H": "2842",
+                "P1D": "2728",
+                "P2H": "2974"
+            },
+            "ranking": {
+                "P4D": "2556",
+                "P3H": "2557",
+                "P2D": "2443",
+                "P2H": "2449"
+            }
         }
 
         self.session: Session = Session()
@@ -181,11 +193,10 @@ class Api:
 
         return data
 
-    @token_refresh_required
     def get_calendar(self, team: str = None):
         session = requests.Session()
-        session.cookies.set("SelectedSeasonId", "1906")
-        session.cookies.set("PortailSelectedSeasonId", "1982")
+        session.cookies.set("SelectedSeasonId", self.calendar_ids[1])
+        session.cookies.set("PortailSelectedSeasonId", self.calendar_ids[0])
         self.set_token(Urls.calendar_token_url(), session=session)
         response: Response = session.post(
             Urls.calendar_url(),
@@ -194,10 +205,9 @@ class Api:
                 "group": "",
                 "filter": "",
                 "searchTerm": "",
-                "districtId": "3",
-                "championshipId": self.teams[team] if team else None,
-                "clubId": "1673",
-
+                "districtId": self.district_id,
+                "championshipId": self.teams['calendar'][team] if team else None,
+                "clubId": self.club_id,
                 "teamId": "0" if team else None,
                 "dateFrom": "-1",
                 "dateTo": "-1"
@@ -205,11 +215,35 @@ class Api:
             headers=self.headers
         )
 
-        return response.json()
-        # print(response.json())
-        # data: List[dict] = response.json().get('Data')
-        #
-        # if not data:
-        #     raise DataNotFoundException()
-        #
-        # return data
+        data: List[dict] = response.json().get('Data')
+
+        if not data:
+            raise DataNotFoundException()
+
+        return data
+
+    def get_ranking(self, team: str = None):
+        session = requests.Session()
+        session.cookies.set("SelectedSeasonId", self.ranking_ids[1])
+        session.cookies.set("PortailSelectedSeasonId", self.ranking_ids[0])
+        self.set_token(Urls.ranking_token_url(), session=session)
+        response: Response = session.post(
+            Urls.ranking_url(),
+            data={
+                "sort": "",
+                "group": "",
+                "filter": "",
+                "districtId": self.district_id,
+                "championshipId": self.teams['ranking'][team] if team else None,
+                "clubId": self.club_id,
+                "teamId": "0" if team else None,
+            },
+            headers=self.headers
+        )
+
+        data: List[dict] = response.json().get('Data')
+
+        if not data:
+            raise DataNotFoundException()
+
+        return data

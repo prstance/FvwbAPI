@@ -35,3 +35,19 @@ class Urls:
     @staticmethod
     def calendar_url() -> str:
         return urljoin(Urls.BASE_URL, "Portail/PagingCalendar")
+
+    @staticmethod
+    def ranking_token_url() -> str:
+        return urljoin(Urls.BASE_URL, "Portail/Ranking")
+
+    @staticmethod
+    def ranking_url() -> str:
+        return urljoin(Urls.BASE_URL, "Portail/PagingRanking")
+
+    @staticmethod
+    def ranking_synoptic_url() -> str:
+        return urljoin(Urls.BASE_URL, "Portail/PagingSynopticTable")
+
+    @staticmethod
+    def ranking_reserve_url() -> str:
+        return urljoin(Urls.BASE_URL, "Portail/PagingRankingReserve")

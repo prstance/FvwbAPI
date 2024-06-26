@@ -46,5 +46,16 @@ def get_calendar():
     })
 
 
+@app.route('/ranking', methods=['GET'])
+def get_ranking():
+    team = request.args.get('team')
+    ranking = api.get_ranking(team)
+
+    return jsonify({
+        "status": "ok",
+        "data": ranking
+    })
+
+
 if __name__ == '__main__':
     app.run(debug=False)

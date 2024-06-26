@@ -221,7 +221,7 @@ class Api:
             headers=self.headers
         )
 
-        data: List[dict] = response.json().get('Data')
+        data: List[dict] = response.json()
 
         if not data:
             raise DataNotFoundException()
@@ -247,7 +247,7 @@ class Api:
             headers=self.headers
         )
 
-        data: List[dict] = response.json().get('Data')
+        data: List[dict] = response.json()
 
         if not data:
             raise DataNotFoundException()

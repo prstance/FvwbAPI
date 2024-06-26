@@ -1,3 +1,4 @@
+import functools
 from typing import List
 
 from dotenv import load_dotenv
@@ -12,6 +13,7 @@ api = Api(username=os.getenv('FVWB_USERNAME'), password=os.getenv('FVWB_PASSWORD
 
 
 def require_secret(view_func):
+    @functools.wraps(view_func)
     def decorated(*args, **kwargs):
         secret_param = request.args.get('secret')
         secret_env = os.getenv('API_SECRET')
@@ -36,6 +38,7 @@ def get_members():
 
 
 @app.route('/calendar', methods=['GET'])
+@require_secret
 def get_calendar():
     team = request.args.get('team')
     calendar = api.get_calendar(team)
@@ -47,6 +50,7 @@ def get_calendar():
 
 
 @app.route('/ranking', methods=['GET'])
+@require_secret
 def get_ranking():
     team = request.args.get('team')
     ranking = api.get_ranking(team)

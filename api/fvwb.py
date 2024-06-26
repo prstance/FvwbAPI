@@ -233,6 +233,7 @@ class Api:
         session.cookies.set("SelectedSeasonId", str(self.season_id_))
         session.cookies.set("PortailSelectedSeasonId", str(self.season_id))
         self.set_token(Urls.ranking_token_url(), session=session)
+        # ranking
         response: Response = session.post(
             Urls.ranking_url(),
             data={
@@ -247,7 +248,29 @@ class Api:
             headers=self.headers
         )
 
-        data: List[dict] = response.json()
+        data_ranking: List[dict] = response.json()
+
+        # ranking reserve
+        response: Response = session.post(
+            Urls.ranking_reserve_url(),
+            data={
+                "sort": "",
+                "group": "",
+                "filter": "",
+                "districtId": str(self.district_id),
+                "championshipId": self.teams['ranking'][team] if team else None,
+                "clubId": str(self.club_id),
+                "teamId": "0" if team else None,
+            },
+            headers=self.headers
+        )
+
+        data_ranking_reserve: List[dict] = response.json()
+
+        data = {
+            "main": data_ranking,
+            "reserve": data_ranking_reserve
+        }
 
         if not data:
             raise DataNotFoundException()

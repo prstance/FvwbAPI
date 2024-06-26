@@ -195,8 +195,8 @@ class Api:
 
     def get_calendar(self, team: str = None):
         session = requests.Session()
-        session.cookies.set("SelectedSeasonId", self.calendar_ids[1])
-        session.cookies.set("PortailSelectedSeasonId", self.calendar_ids[0])
+        session.cookies.set("SelectedSeasonId", str(self.calendar_ids[1]))
+        session.cookies.set("PortailSelectedSeasonId", str(self.calendar_ids[0]))
         self.set_token(Urls.calendar_token_url(), session=session)
         response: Response = session.post(
             Urls.calendar_url(),
@@ -205,9 +205,9 @@ class Api:
                 "group": "",
                 "filter": "",
                 "searchTerm": "",
-                "districtId": self.district_id,
+                "districtId": str(self.district_id),
                 "championshipId": self.teams['calendar'][team] if team else None,
-                "clubId": self.club_id,
+                "clubId": str(self.club_id),
                 "teamId": "0" if team else None,
                 "dateFrom": "-1",
                 "dateTo": "-1"
@@ -224,8 +224,8 @@ class Api:
 
     def get_ranking(self, team: str = None):
         session = requests.Session()
-        session.cookies.set("SelectedSeasonId", self.ranking_ids[1])
-        session.cookies.set("PortailSelectedSeasonId", self.ranking_ids[0])
+        session.cookies.set("SelectedSeasonId", str(self.ranking_ids[1]))
+        session.cookies.set("PortailSelectedSeasonId", str(self.ranking_ids[0]))
         self.set_token(Urls.ranking_token_url(), session=session)
         response: Response = session.post(
             Urls.ranking_url(),
@@ -233,9 +233,9 @@ class Api:
                 "sort": "",
                 "group": "",
                 "filter": "",
-                "districtId": self.district_id,
+                "districtId": str(self.district_id),
                 "championshipId": self.teams['ranking'][team] if team else None,
-                "clubId": self.club_id,
+                "clubId": str(self.club_id),
                 "teamId": "0" if team else None,
             },
             headers=self.headers

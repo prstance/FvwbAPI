@@ -35,13 +35,5 @@ def get_members():
     })
 
 
-@app.route('/test', methods=['GET'])
-def get_test():
-    return jsonify({
-        "status": "ok",
-        "data": "test"
-    })
-
-
 if __name__ == '__main__':
     app.run(debug=False)

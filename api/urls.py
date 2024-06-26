@@ -27,3 +27,11 @@ class Urls:
     @staticmethod
     def members_url() -> str:
         return urljoin(Urls.BASE_URL, "Member/PagingMembersGrid")
+
+    @staticmethod
+    def calendar_token_url() -> str:
+        return urljoin(Urls.BASE_URL, "Portail/Calendar")
+
+    @staticmethod
+    def calendar_url() -> str:
+        return urljoin(Urls.BASE_URL, "Portail/PagingCalendar")

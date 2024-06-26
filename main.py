@@ -35,5 +35,16 @@ def get_members():
     })
 
 
+@app.route('/calendar', methods=['GET'])
+def get_calendar():
+    team = request.args.get('team')
+    calendar = api.get_calendar(team)
+
+    return jsonify({
+        "status": "ok",
+        "data": calendar
+    })
+
+
 if __name__ == '__main__':
     app.run(debug=False)

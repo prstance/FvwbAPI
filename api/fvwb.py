@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 from functools import wraps
 from typing import List
+
+import requests
 from bs4 import BeautifulSoup
 from requests import Session, Response
 
@@ -19,6 +21,14 @@ class Api:
             'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
             'x-requested-with': 'XMLHttpRequest',
         }
+
+        self.teams = {
+            "P4D": "2841",
+            "P3H": "2842",
+            "P1D": "2728",
+            "P2H": "2974"
+        }
+
         self.session: Session = Session()
 
         self.last_auth_time: datetime = datetime.now()
@@ -55,14 +65,17 @@ class Api:
 
         self.session.post(url, data=login_payload, allow_redirects=False)
 
-    def set_token(self, url: str) -> None:
+    def set_token(self, url: str, session=None) -> None:
         """
         Used to update cookies (the token) before making a request to the portal.
+        :param session:
         :param url:
         :return:
         """
-
-        response: Response = self.session.get(url)
+        if not session:
+            response: Response = self.session.get(url)
+        else:
+            response: Response = session.get(url)
 
         soup: BeautifulSoup = BeautifulSoup(response.content, 'html.parser')
         try:
@@ -167,3 +180,35 @@ class Api:
             raise DataNotFoundException()
 
         return data
+
+    @token_refresh_required
+    def get_calendar(self, team: str):
+        session = requests.Session()
+        session.cookies.set("SelectedSeasonId", "1906")
+        session.cookies.set("PortailSelectedSeasonId", "1982")
+        self.set_token(Urls.calendar_token_url(), session=session)
+        response: Response = session.post(
+            Urls.calendar_url(),
+            data={
+                "sort": "",
+                "group": "",
+                "filter": "",
+                "searchTerm": "",
+                "districtId": "3",
+                "championshipId": self.teams[team],
+                "clubId": "1673",
+                "teamId": "0",
+                "dateFrom": "-1",
+                "dateTo": "-1"
+            },
+            headers=self.headers
+        )
+
+        return response.json()
+        # print(response.json())
+        # data: List[dict] = response.json().get('Data')
+        #
+        # if not data:
+        #     raise DataNotFoundException()
+        #
+        # return data

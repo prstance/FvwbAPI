@@ -27,7 +27,7 @@ def require_secret(view_func):
 @app.route('/members', methods=['GET'])
 @require_secret
 def get_members():
-    members: List[dict] = api.get_members()
+    members: List[dict] = api.get_affiliates()
 
     return jsonify({
         "status": "ok",

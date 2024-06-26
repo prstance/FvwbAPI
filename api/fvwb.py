@@ -182,7 +182,7 @@ class Api:
         return data
 
     @token_refresh_required
-    def get_calendar(self, team: str):
+    def get_calendar(self, team: str = None):
         session = requests.Session()
         session.cookies.set("SelectedSeasonId", "1906")
         session.cookies.set("PortailSelectedSeasonId", "1982")
@@ -195,9 +195,10 @@ class Api:
                 "filter": "",
                 "searchTerm": "",
                 "districtId": "3",
-                "championshipId": self.teams[team],
+                "championshipId": self.teams[team] if team else None,
                 "clubId": "1673",
-                "teamId": "0",
+
+                "teamId": "0" if team else None,
                 "dateFrom": "-1",
                 "dateTo": "-1"
             },

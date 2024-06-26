@@ -16,16 +16,16 @@ class Api:
         self.password: str = password
         print(username, password)
         self.token: str or None = None
-        self.club_id = 1673
-        self.district_id = 3
-        self.ranking_ids = (1774, 1906)  # PortailSelectedSeasonId, SelectedSeasonId
-        self.calendar_ids = (1982, 1906)  # PortailSelectedSeasonId, SelectedSeasonId
         self.headers: dict = {
             'accept': '*/*',
             'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
             'x-requested-with': 'XMLHttpRequest',
         }
 
+        self.club_id = 1673
+        self.district_id = 3
+        self.season_id = 1982  # PortailSelectedSeasonId
+        self.season_id_ = 1906  # SelectedSeasonId
         self.teams = {
             "calendar": {
                 "P4D": "2841",
@@ -33,11 +33,17 @@ class Api:
                 "P1D": "2728",
                 "P2H": "2974"
             },
+            # "ranking": {
+            #     "P4D": "2556",
+            #     "P3H": "2557",
+            #     "P2D": "2443",
+            #     "P2H": "2449"
+            # },
             "ranking": {
-                "P4D": "2556",
-                "P3H": "2557",
-                "P2D": "2443",
-                "P2H": "2449"
+                "P4D": "2841",
+                "P3H": "2842",
+                "P1D": "2728",
+                "P2H": "2974"
             }
         }
 
@@ -195,8 +201,8 @@ class Api:
 
     def get_calendar(self, team: str = None):
         session = requests.Session()
-        session.cookies.set("SelectedSeasonId", str(self.calendar_ids[1]))
-        session.cookies.set("PortailSelectedSeasonId", str(self.calendar_ids[0]))
+        session.cookies.set("SelectedSeasonId", str(self.season_id_))
+        session.cookies.set("PortailSelectedSeasonId", str(self.season_id_))
         self.set_token(Urls.calendar_token_url(), session=session)
         response: Response = session.post(
             Urls.calendar_url(),
@@ -224,8 +230,8 @@ class Api:
 
     def get_ranking(self, team: str = None):
         session = requests.Session()
-        session.cookies.set("SelectedSeasonId", str(self.ranking_ids[1]))
-        session.cookies.set("PortailSelectedSeasonId", str(self.ranking_ids[0]))
+        session.cookies.set("SelectedSeasonId", str(self.season_id_))
+        session.cookies.set("PortailSelectedSeasonId", str(self.season_id))
         self.set_token(Urls.ranking_token_url(), session=session)
         response: Response = session.post(
             Urls.ranking_url(),

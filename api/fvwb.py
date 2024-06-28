@@ -202,7 +202,7 @@ class Api:
     def get_calendar(self, team: str = None):
         session = requests.Session()
         session.cookies.set("SelectedSeasonId", str(self.season_id_))
-        session.cookies.set("PortailSelectedSeasonId", str(self.season_id_))
+        session.cookies.set("PortailSelectedSeasonId", str(self.season_id))
         self.set_token(Urls.calendar_token_url(), session=session)
         response: Response = session.post(
             Urls.calendar_url(),

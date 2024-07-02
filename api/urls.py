@@ -59,3 +59,19 @@ class Urls:
     @staticmethod
     def referee_fee_url() -> str:
         return urljoin(Urls.BASE_URL, "RefereeExpense/PagingRefereeExpenses/0?callingPage=OriginalPage")
+
+    @staticmethod
+    def team_token_url() -> str:
+        return urljoin(Urls.BASE_URL, "Team/Index")
+
+    @staticmethod
+    def team_url() -> str:
+        return urljoin(Urls.BASE_URL, "Team/PagingElements/0?callingPage=OriginalPage")
+
+    @staticmethod
+    def player_token_url() -> str:
+        return urljoin(Urls.BASE_URL, "Player/Index")
+
+    @staticmethod
+    def player_url() -> str:
+        return urljoin(Urls.BASE_URL, "Player/PagingTeamAffiliates/0?callingPage=Player")

@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from requests import Session, Response
 
 from api import Urls
-from api.exceptions import TokenNotFoundException, DataNotFoundException
+from api.exceptions import TokenNotFoundException
 
 
 class Api:
@@ -265,6 +265,36 @@ class Api:
                 "filter": "",
                 "searchTerm": "",
                 "isPaid": False
+            },
+            headers=self.headers
+        )
+        return response.json()
+
+    @token_refresh_required
+    def get_team(self):
+        self.set_token(Urls.team_token_url())
+        response: Response = self.session.post(
+            Urls.team_url(),
+            data={
+                "sort": "",
+                "group": "",
+                "filter": "",
+            },
+            headers=self.headers
+        )
+        return response.json()
+
+    @token_refresh_required
+    def get_player(self):
+        self.set_token(Urls.player_token_url())
+        response: Response = self.session.post(
+            Urls.player_url(),
+            data={
+                "sort": "",
+                "group": "",
+                "filter": "",
+                "searchTerm": "",
+                "inErrorOnly": False
             },
             headers=self.headers
         )

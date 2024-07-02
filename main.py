@@ -72,5 +72,27 @@ def get_referee_fee():
     })
 
 
+@app.route('/team', methods=['GET'])
+@require_secret
+def get_team():
+    data = api.get_team()
+
+    return jsonify({
+        "status": "ok",
+        "data": data
+    })
+
+
+@app.route('/player', methods=['GET'])
+@require_secret
+def get_player():
+    data = api.get_player()
+
+    return jsonify({
+        "status": "ok",
+        "data": data
+    })
+
+
 if __name__ == '__main__':
     app.run(debug=False)

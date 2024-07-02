@@ -51,3 +51,11 @@ class Urls:
     @staticmethod
     def ranking_reserve_url() -> str:
         return urljoin(Urls.BASE_URL, "Portail/PagingRankingReserve")
+
+    @staticmethod
+    def referee_fee_token_url() -> str:
+        return urljoin(Urls.BASE_URL, "RefereeExpense/Index")
+
+    @staticmethod
+    def referee_fee_url() -> str:
+        return urljoin(Urls.BASE_URL, "RefereeExpense/PagingRefereeExpenses/0?callingPage=OriginalPage")

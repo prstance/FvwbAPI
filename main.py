@@ -61,5 +61,16 @@ def get_ranking():
     })
 
 
+@app.route('/referee/fee', methods=['GET'])
+@require_secret
+def get_referee_fee():
+    data = api.get_referee_fee()
+
+    return jsonify({
+        "status": "ok",
+        "data": data
+    })
+
+
 if __name__ == '__main__':
     app.run(debug=False)

@@ -48,6 +48,8 @@ class Api:
         }
 
         self.session: Session = Session()
+        self.session.cookies.set("SelectedSeasonId", str(self.season_id_))
+        self.session.cookies.set("PortailSelectedSeasonId", str(self.season_id))
 
         self.last_auth_time: datetime = datetime.now()
         self.session_time = timedelta(days=5)
@@ -139,12 +141,7 @@ class Api:
             "currentOnly": False
         }, headers=self.headers)
 
-        data: dict = response.json().get('Data')
-
-        if not data:
-            raise DataNotFoundException()
-
-        return data[0]
+        return response.json()
 
     @token_refresh_required
     def get_members(self) -> List[dict]:
@@ -165,12 +162,7 @@ class Api:
             headers=self.headers
         )
 
-        data: List[dict] = response.json().get('Data')
-
-        if not data:
-            raise DataNotFoundException()
-
-        return data
+        return response.json()
 
     @token_refresh_required
     def get_affiliates(self) -> List[dict]:
@@ -192,12 +184,7 @@ class Api:
             headers=self.headers
         )
 
-        data: List[dict] = response.json().get('Data')
-
-        if not data:
-            raise DataNotFoundException()
-
-        return data
+        return response.json()
 
     def get_calendar(self, team: str = None):
         session = requests.Session()
@@ -221,12 +208,7 @@ class Api:
             headers=self.headers
         )
 
-        data: List[dict] = response.json()
-
-        if not data:
-            raise DataNotFoundException()
-
-        return data
+        return response.json()
 
     def get_ranking(self, team: str = None):
         session = requests.Session()
@@ -267,12 +249,23 @@ class Api:
 
         data_ranking_reserve: List[dict] = response.json()
 
-        data = {
+        return {
             "main": data_ranking,
             "reserve": data_ranking_reserve
         }
 
-        if not data:
-            raise DataNotFoundException()
-
-        return data
+    @token_refresh_required
+    def get_referee_fee(self):
+        self.set_token(Urls.referee_fee_token_url())
+        response: Response = self.session.post(
+            Urls.referee_fee_url(),
+            data={
+                "sort": "",
+                "group": "",
+                "filter": "",
+                "searchTerm": "",
+                "isPaid": False
+            },
+            headers=self.headers
+        )
+        return response.json()
